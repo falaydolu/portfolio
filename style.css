@@ -108,22 +108,29 @@ body, html {
 .work-tag.left-pull .line { margin-left: 12px; }
 
 /* 针对 Gaze 和 Desire 的特殊划线方向 */
-.gaze-link::after, 
-.desire-link::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    right: 0;       /* 核心：将起始点固定在右侧 */
-    width: 0;
-    height: 1px;
-    background-color: #000;
-    transition: width 0.4s ease;
+/* 针对 Gaze 和 Desire 的右起划线强化版 */
+.gaze-link .title, 
+.desire-link .title {
+    position: relative; /* 必须有相对定位，::after 才能挂在文字下面 */
+    display: inline-block;
 }
 
-.gaze-link:hover::after, 
-.desire-link:hover::after {
-    width: 100%;    /* 悬停时向左延伸 */
-    left: auto;     /* 确保不会被左侧定位干扰 */
+.gaze-link .title::after, 
+.desire-link .title::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;   /* 距离文字底部的距离 */
+    right: 0 !important; /* 强制锁定右侧 */
+    width: 0;
+    height: 1px;
+    background-color: #ffffff; /* Landing page 建议用白色，如果是黑色请改回 #000 */
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gaze-link:hover .title::after, 
+.desire-link:hover .title::after {
+    width: 100% !important; /* 悬停时长满 */
+    left: auto !important;
 }
 
 .work-tag .title {
