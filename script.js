@@ -3,9 +3,9 @@ const revealLayer = document.querySelector('.interactive-reveal');
 // 坐标点配置 (x对应left, y对应top)
 const points = [
     { id: 'tag-language', x: 52, y: 54 },
-    { id: 'tag-gaze', x: 38, y: 45 },
+    { id: 'tag-gaze', x: 40, y: 45 },
     { id: 'tag-unspoken', x: 54, y: 32 },
-    { id: 'tag-desire', x: 42, y: 15 }
+    { id: 'tag-desire', x: 20, y: 15 }
 ];
 
 document.addEventListener('mousemove', (e) => {

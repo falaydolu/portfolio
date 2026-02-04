@@ -104,34 +104,12 @@ body, html {
     /* 3秒慢速拉伸/缩回 */
     transition: width 3s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .work-tag:not(.left-pull) .line { margin-right: 12px; }
-.work-tag.left-pull .line { margin-left: 12px; }
+.work-tag.left-pull .line { margin-left: 12px; transform-origin: left;}
+/* 确保原本的左对齐逻辑不受影响 */
+.work-tag.left-pull {flex-direction: row; }
 
-/* 针对 Gaze 和 Desire 的特殊划线方向 */
-/* 针对 Gaze 和 Desire 的右起划线强化版 */
-.gaze-link .title, 
-.desire-link .title {
-    position: relative; /* 必须有相对定位，::after 才能挂在文字下面 */
-    display: inline-block;
-}
-
-.gaze-link .title::after, 
-.desire-link .title::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;   /* 距离文字底部的距离 */
-    right: 0 !important; /* 强制锁定右侧 */
-    width: 0;
-    height: 1px;
-    background-color: #ffffff; /* Landing page 建议用白色，如果是黑色请改回 #000 */
-    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.gaze-link:hover .title::after, 
-.desire-link:hover .title::after {
-    width: 100% !important; /* 悬停时长满 */
-    left: auto !important;
-}
 
 .work-tag .title {
     font-family: "Gill Sans", sans-serif; font-weight: 300; font-size: 13px;
@@ -149,4 +127,23 @@ body, html {
     opacity: 1; transform: translateX(0);
     /* 出现时的延迟与速度 */
     transition: opacity 2s ease 1s, transform 2s ease 1s;
+}
+
+/* 针对右侧标签（gaze, desire）：线条从右往左拉伸 */
+.right-pull .tag-link {
+    flex-direction: row !important; /* 文字在左，线在右 */
+}
+
+.right-pull .line {
+    margin-left: 12px !important;
+    margin-right: 0 !important;
+    width: 80px !important;           /* 固定宽度 */
+    transform: scaleX(0);             /* 初始缩放为0 */
+    transform-origin: right center !important;  /* 从右边开始扩展 */
+    transition: transform 3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* 激活状态：线条从右往左展开 */
+.work-tag.active.right-pull .line {
+    transform: scaleX(1) !important;
 }
