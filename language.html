@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song of Ineffable | Vivian Lu</title>
+    <link rel="stylesheet" href="work-style.css">
+</head>
+<body>
+
+    <a href="index.html" class="back-home">Close</a>
+
+    <div class="main-content">
+        <div class="media-container">
+            <video id="main-video" class="work-media force-sync" loop playsinline controls controlsList="nodownload" oncontextmenu="return false;">
+            <source src="song of ineffable/1.mp4" type="video/mp4">
+        </video>
+            
+            <img id="main-image" src="" alt="Work Gallery" class="work-media" style="display: none;">
+            
+            <div class="slider-controls">
+                <span class="arrow prev" onclick="changeMedia(-1)"> < </span>
+                <span id="page-indicator" class="page-indicator">1/6</span>
+                <span class="arrow next" onclick="changeMedia(1)"> > </span>
+            </div>
+        </div>
+
+        <footer class="work-footer">
+            <div class="footer-left">
+                <p class="work-title">Song of Ineffable</p>
+                <div class="work-details">
+                    <p>2024</p>
+                    <p>Sound Installation</p>
+                    <p>Mixed material</p>
+                    <p>180 x 180 x 250cm</p>
+                </div>
+            </div>
+            <div class="footer-right">
+                <a href="language-context.html" class="context-link">CONTEXT</a>
+            </div>
+        </footer>
+    </div>
+
+<script>
+    let currentIndex = 1;
+    const totalMedia = 6;
+    const folder = "song of ineffable/";
+
+    const videoEl = document.getElementById('main-video');
+    const imageEl = document.getElementById('main-image');
+    const indicator = document.getElementById('page-indicator');
+
+    // --- 新增：动态同步尺寸函数 ---
+    function syncImageSize() {
+        // 获取视频实际在屏幕上显示的宽高
+        const rect = videoEl.getBoundingClientRect();
+        if (rect.width > 0) {
+            imageEl.style.width = rect.width + "px";
+            imageEl.style.height = rect.height + "px";
+        }
+    }
+
+    function changeMedia(direction) {
+        // 切换前先确保同步一次尺寸
+        syncImageSize();
+
+        currentIndex += direction;
+        if (currentIndex < 1) currentIndex = totalMedia;
+        if (currentIndex > totalMedia) currentIndex = 1;
+
+        indicator.innerText = currentIndex + "/" + totalMedia;
+
+        if (currentIndex === 1) {
+            imageEl.style.display = "none";
+            videoEl.style.display = "block";
+            videoEl.play().catch(e => {});
+        } else {
+            videoEl.pause();
+            videoEl.style.display = "none";
+            imageEl.style.display = "block";
+            imageEl.src = folder + currentIndex + ".JPG";
+        }
+    }
+
+    // 窗口缩放时也要重新计算
+    window.addEventListener('resize', syncImageSize);
+
+    // 视频加载完成后立即同步一次
+    videoEl.addEventListener('loadedmetadata', syncImageSize);
+
+    window.addEventListener('click', () => {
+        if (currentIndex === 1 && videoEl.paused) {
+            videoEl.play();
+        }
+    }, { once: true });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Vivian Lu</title>
+    <link rel="stylesheet" href="context-style.css">
+    <style>
+        .about-content {
+            margin-top: 100px;
+        }
+
+        .cv-section {
+            display: grid;
+            /* 这里的 250px 决定了左边 Label 的宽度，你可以根据需要调大或调小 */
+            grid-template-columns: 250px 1fr; 
+            margin-bottom: 80px;
+            gap: 0; /* 移除 gap 方便精准控制对齐感 */
+        }
+
+        .cv-label {
+            font-family: "Gill Sans", sans-serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 500;
+            line-height: 1.8; /* 与右侧第一行对齐 */
+        }
+
+        .cv-details {
+            /* 保持与 Label 一样的字体风格 */
+            font-family: "Gill Sans", sans-serif;
+            font-size: 12px; 
+            line-height: 1.8;
+        }
+
+        .entry {
+            margin-bottom: 21px; /* 段落之间的留白 */
+        
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">Back</a>
+
+   <main class="context-container">
+    <div class="about-content">
+        
+        <div class="cv-section">
+            <span class="cv-label">EDUCATION</span>
+            <div class="cv-details">
+                <div class="entry">
+                    University of California, Berkeley<br>Master in Design
+                </div>
+                <div class="entry">
+                    Barnard College, Columbia University<br>BA  in  Art History & Visual Arts | Minor in Philosophy
+                </div>
+            </div>
+        </div>
+
+        <div class="cv-section">
+            <span class="cv-label">SOLO EXHIBITION</span>
+            <div class="cv-details">
+                <div class="entry">
+                    Rooted Gallery, Shanghai (2025)
+                <br>
+                    Ovary Gallery, Shanghai (2024)
+                </div>
+            </div>
+        </div>
+
+        <div class="cv-section">
+            <span class="cv-label">GROUP EXHIBITION</span>
+            <div class="cv-details">
+                <div class="entry">
+                    <i>Memoirs of Loss and Renewal</i>, BJAC GALLERY, Los Angeles (2025)
+                <br>
+                    <i>Whose Spirit is This?</i>, BARNARD COLLEGE, New York (2022)
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+</body>
+</html>

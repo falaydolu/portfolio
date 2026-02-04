@@ -1,0 +1,163 @@
+body, html {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    background-color: #ffffff;
+    font-family: "Gill Sans", sans-serif;
+    color: #000;
+    overflow: hidden;
+}
+
+/* Close 按钮位置 */
+.back-home {
+    position: fixed;
+    top: 40px; left: 40px;
+    text-decoration: none;
+    color: #000;
+    font-size: 12px;
+    letter-spacing: 2px;
+    z-index: 100;
+}
+
+.main-content {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- work-style.css --- */
+
+.media-container {
+    position: relative;
+    /* 1. 宽度依然锁定，确保和底部文字对齐基准一致 */
+    width: 54vw; 
+    height: 55vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: -10vh; /* 【微调】调整整体画面上下位置 */
+}
+
+.work-media {
+    /* 移除之前的 width: auto !important; */
+    max-height: 55vh !important;
+    max-width: 100% !important;
+    display: block;
+    margin: 0 auto;
+    object-fit: cover; /* 默认设为覆盖，JS 会在 7 号图时修改它 */
+    background: transparent !important;
+}
+
+#main-video {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain; /* 保持视频原样，无白边 */
+}
+
+#main-image {
+    /* 2. 这里的宽高将由 JS 动态控制，初始设为 auto */
+    width: auto;
+    height: auto;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: cover; /* 强行填满 JS 计算出的视频区域 */
+}
+
+/* 3. 底部对齐的横线 */
+.slider-controls {
+    position: fixed;
+    bottom: 196px; /* 【对齐关键】须与 .work-footer 一致 */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 30px;
+    font-size: 13px;
+    z-index: 50;
+}
+
+/* --- 底部信息栏总容器 --- */
+.work-footer {
+    position: fixed;
+    bottom: 121px;       /* 调整这个数值来整体上下移动底栏 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 54vw;        
+    display: flex;
+    justify-content: space-between;
+    /* 关键修正：改为 baseline 对齐，让文字的“脚”站在同一条线上 */
+    align-items: baseline; 
+}
+
+/* --- 左侧：作品标题 --- */
+.work-title {
+    font-family: "Gill Sans", sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: #000000;
+    /* 关键修正：移除 margin-bottom，改为使用 padding 或者让容器自适应 */
+    margin: 0; 
+    line-height: 1; /* 强制行高为1，消除文字上下的多余空白 */
+}
+
+/* --- 左侧：灰色详情外层 --- */
+.work-details {
+    /* 给灰字部分加一个向上的间距，这样它就不会顶着标题 */
+    margin-top: 12px; 
+}
+
+.work-details p {
+    color: #999999;
+    font-size: 11px;
+    margin: 4px 0;
+    letter-spacing: 1px;
+    font-weight: 300;
+}
+
+/* --- 右侧：CONTEXT 链接 --- */
+/* --- 右侧：CONTEXT 链接动画 --- */
+.footer-right .context-link {
+    display: inline-block;
+    text-decoration: none;
+    color: #000000;
+    font-size: 13px;
+    letter-spacing: 2px;
+    line-height: 1;
+    position: relative; /* 必须设为 relative，以便让线条定位 */
+    padding-bottom: 5px; /* 字和线之间的距离 */
+}
+
+/* 先把原本的静态边框删掉（如果有的话） */
+.footer-right .context-link {
+    border-bottom: none !important;
+}
+
+/* 用伪元素创建“隐藏”的下划线 */
+.footer-right .context-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;         /* 线条厚度 */
+    bottom: 0;
+    left: 0;
+    background-color: #000;
+    
+    /* 初始状态：缩放为 0（看不见），从中心开始 */
+    transform: scaleX(0);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* 优雅的拉丝感动画 */
+    transform-origin: center; 
+}
+
+/* Hover 状态：线条伸长 */
+.footer-right .context-link:hover::after {
+    transform: scaleX(1); /* 变为 100% 长度 */
+}
+
+/* 可选：滑过时字稍微变淡一点点，增加呼吸感 */
+.footer-right .context-link:hover {
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}

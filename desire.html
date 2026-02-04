@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desire | Vivian Lu</title>
+    <link rel="stylesheet" href="work-style.css">
+ <style>
+    /* 统一 54vw 视觉规范：针对视频和横图 */
+    .force-sync {
+        width: 54vw !important; 
+        height: 100% !important; 
+        object-fit: cover !important;
+    }
+    
+    /* 针对 6, 7 号竖图：释放尺寸限制，保持原始比例 */
+    .natural-size {
+        width: auto !important;
+        height: auto !important;
+        max-height: 55vh !important; /* 确保不超出屏幕高度 */
+        object-fit: contain !important;
+    }
+</style>
+</head>
+<body>
+
+    <a href="index.html" class="back-home">Close</a>
+
+    <div class="main-content">
+        <div class="media-container" style="width: 54vw;">
+            <video id="main-video" class="work-media force-sync" loop playsinline controls controlsList="nodownload" oncontextmenu="return false;">
+             <source src="undo_human/1.mp4" type="video/mp4">
+        </video>
+            
+            <img id="main-image" src="" alt="Work Gallery" class="work-media force-sync" style="display: none;">
+            
+            <div class="slider-controls">
+                <span class="arrow prev" onclick="changeMedia(-1)"> < </span>
+                <span id="page-indicator" class="page-indicator">1/7</span>
+                <span class="arrow next" onclick="changeMedia(1)"> > </span>
+            </div>
+        </div>
+
+        <footer class="work-footer" style="width: 54vw;">
+            <div class="footer-left">
+                <p class="work-title">UNDO HUMAN</p>
+                <div class="work-details">
+                    <p>2024</p>
+                    <p>Interactive Installation</p>
+                    <p>Mixed material</p>
+                    <p>200 x 200 x 270cm</p>
+                </div>
+            </div>
+            <div class="footer-right">
+                <a href="desire-context.html" class="context-link">CONTEXT</a>
+            </div>
+        </footer>
+    </div>
+
+<script>
+    let currentIndex = 1;
+    const totalMedia = 7; 
+    const folder = "undo_human/";
+
+    const videoEl = document.getElementById('main-video');
+    const imageEl = document.getElementById('main-image');
+    const indicator = document.getElementById('page-indicator');
+
+    function changeMedia(direction) {
+        currentIndex += direction;
+        if (currentIndex < 1) currentIndex = totalMedia;
+        if (currentIndex > totalMedia) currentIndex = 1;
+
+        indicator.innerText = currentIndex + "/" + totalMedia;
+
+        if (currentIndex === 1) {
+            imageEl.style.display = "none";
+            videoEl.style.display = "block";
+            videoEl.play().catch(e => {});
+        } else {
+            videoEl.pause();
+            videoEl.style.display = "none";
+            imageEl.style.display = "block";
+            imageEl.src = folder + currentIndex + ".jpg";
+
+            // 清除之前的状态类
+            imageEl.classList.remove('force-sync', 'natural-size');
+
+            // 特殊逻辑：6号和7号是竖图
+            if (currentIndex === 6 || currentIndex === 7) {
+                imageEl.classList.add('natural-size');
+            } else {
+                // 2, 3, 4, 5 号横图强制同步
+                imageEl.classList.add('force-sync');
+            }
+        }
+    }
+
+    window.addEventListener('click', () => {
+        if (currentIndex === 1 && videoEl.paused) videoEl.play();
+    }, { once: true });
+</script>
+
+</body>
+</html>

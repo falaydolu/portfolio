@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Lingers, Silenced | Vivian Lu</title>
+    <link rel="stylesheet" href="work-style.css">
+    <style>
+        /* 强制 54vw 宽度，并保持你要求的比例感 */
+        .force-sync {
+            width: 54vw !important; 
+            height: 100% !important; /* 你可以根据图片感官微调高度 */
+            object-fit: cover !important;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-home">Close</a>
+
+    <div class="main-content">
+        <div class="media-container" style="width: 54vw;">
+            <img id="main-image" src="transcend_the_past/1.png" alt="Work Gallery" class="work-media force-sync" style="display: block;">
+            
+            <video id="main-video" class="work-media force-sync" loop playsinline 
+                   onmouseover="this.controls=true" 
+                   onmouseout="this.controls=false"
+                   style="display: none;">
+                <source src="transcend_the_past/6.mp4" type="video/mp4">
+            </video>
+            
+            <div class="slider-controls">
+                <span class="arrow prev" onclick="changeMedia(-1)"> < </span>
+                <span id="page-indicator" class="page-indicator">1/6</span>
+                <span class="arrow next" onclick="changeMedia(1)"> > </span>
+            </div>
+        </div>
+
+        <footer class="work-footer" style="width: 54vw;">
+            <div class="footer-left">
+                <p class="work-title">Transcend the Past</p>
+                <div class="work-details">
+                    <p>2025</p>
+                    <p>Interactive Installation</p>
+                    <p>Mixed material</p>
+                </div>
+            </div>
+            <div class="footer-right">
+                <a href="silenced-context.html" class="context-link">CONTEXT</a>
+            </div>
+        </footer>
+    </div>
+
+<script>
+    let currentIndex = 1;
+    const totalMedia = 6; 
+    const folder = "transcend_the_past/";
+
+    const videoEl = document.getElementById('main-video');
+    const imageEl = document.getElementById('main-image');
+    const indicator = document.getElementById('page-indicator');
+
+    function changeMedia(direction) {
+        currentIndex += direction;
+        if (currentIndex < 1) currentIndex = totalMedia;
+        if (currentIndex > totalMedia) currentIndex = 1;
+
+        indicator.innerText = currentIndex + "/" + totalMedia;
+
+        if (currentIndex === 6) {
+            // 切换到 6 号视频
+            imageEl.style.display = "none";
+            videoEl.style.display = "block";
+            videoEl.play().catch(e => {});
+        } else {
+            // 切换到 1-5 号图片
+            videoEl.pause();
+            videoEl.style.display = "none";
+            imageEl.style.display = "block";
+            imageEl.src = folder + currentIndex + ".png";
+            
+            // 全部图片强制使用同步尺寸类名
+            imageEl.classList.add('force-sync');
+        }
+    }
+
+    // 针对 6 号视频的交互播放
+    window.addEventListener('click', () => {
+        if (currentIndex === 6 && videoEl.paused) videoEl.play();
+    }, { once: true });
+</script>
+</body>
+</html>

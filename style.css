@@ -1,0 +1,126 @@
+body, html {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+.viewport { position: relative; width: 100vw; height: 100vh; }
+
+.layer {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transform: scale(1.4);
+    object-position: center -200%;
+    pointer-events: none;
+}
+
+/* 基础层 */
+.static-layer { z-index: 1; opacity: 0.6; filter: blur(15px); }
+
+/* 动态重影 */
+.moving-layer {
+    z-index: 10; opacity: 0.1; filter: blur(15px);
+    animation: drift 15s ease-in-out infinite;
+}
+@keyframes drift {
+    0%, 100% { transform: scale(1.4) translateX(0); }
+    50% { transform: scale(1.4) translateX(2%); }
+}
+
+/* 交互层：加深处理 + 400px 柔和遮罩 */
+.interactive-reveal {
+    z-index: 20; opacity: 0; 
+    /* 加深图片效果 */
+    filter: brightness(0.5) contrast(1.2); 
+    transition: opacity 1.5s ease;
+    transform: scale(1.4);
+    object-position: center -200%;
+    pointer-events: none;
+
+    -webkit-mask-image: radial-gradient(circle at -500px -500px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px);
+    mask-image: radial-gradient(circle at -500px -500px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+.viewport:hover .interactive-reveal { opacity: 0.9; }
+
+/* 静态文字样式 */
+.floating-text {
+    position: absolute; top: 95%; left: 16%;
+    transform: translate(-50%, -50%);
+    z-index: 5; display: flex;
+    font-family: "Gill Sans", sans-serif;
+    font-weight: 300; font-size: 18px; color: #ffffff;
+    pointer-events: none;
+}
+.t1 { margin-right: 27px; } .t2 { margin-right: 27px; } .t3 { margin-right: 27px; }
+.t4 { margin-right: 27px; } .t5 { margin-right: 27px; }.t6 { margin-right: 27px; }
+.t7 { margin-right: 27px; }.t8 { margin-right: 27px; }
+
+.top-right-nav {
+    position: fixed;
+    top: 40px;      /* 与左上角 Close 按钮对齐 */
+    right: 40px;    /* 距离右边缘 40px */
+    display: flex;
+    gap: 30px;      /* 两个选项之间的距离 */
+    z-index: 1000;
+}
+
+ /* 右上角 */
+.nav-item {
+    text-decoration: none;
+    color: #ffffff;
+   
+    font-family: "Gill Sans", sans-serif;
+    font-size: 13px;       /* 调整为你左下角的大小 */
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: opacity 0.3s;
+}
+
+.nav-item:hover {
+    opacity: 0.5; /* 鼠标悬停时轻微变淡 */
+}
+
+/* 作品标签与链接 */
+.tag-link {
+    text-decoration: none; color: inherit;
+    display: flex; align-items: center;
+    pointer-events: none; /* 初始不可点 */
+    cursor: crosshair;
+}
+
+.work-tag {
+    position: absolute; opacity: 0; z-index: 30;
+    /* 消失时的极慢余韵 */
+    transition: opacity 2.5s ease; 
+}
+
+.work-tag .line {
+    width: 0; height: 1px; background: rgba(255, 255, 255, 0.8);
+    /* 3秒慢速拉伸/缩回 */
+    transition: width 3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.work-tag:not(.left-pull) .line { margin-right: 12px; }
+.work-tag.left-pull .line { margin-left: 12px; }
+
+.work-tag .title {
+    font-family: "Gill Sans", sans-serif; font-weight: 300; font-size: 13px;
+    color: #ffffff; letter-spacing: 0.15em; white-space: nowrap;
+    opacity: 0;
+    /* 消失时的速度 */
+    transition: opacity 2s ease;
+}
+
+/* 激活状态 */
+.work-tag.active { opacity: 1; transition: opacity 1s ease; }
+.work-tag.active .tag-link { pointer-events: auto; } /* 激活后可点击 */
+.work-tag.active .line { width: 80px; }
+.work-tag.active .title {
+    opacity: 1; transform: translateX(0);
+    /* 出现时的延迟与速度 */
+    transition: opacity 2s ease 1s, transform 2s ease 1s;
+}
