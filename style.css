@@ -107,6 +107,25 @@ body, html {
 .work-tag:not(.left-pull) .line { margin-right: 12px; }
 .work-tag.left-pull .line { margin-left: 12px; }
 
+/* 针对 Gaze 和 Desire 的特殊划线方向 */
+.gaze-link::after, 
+.desire-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    right: 0;       /* 核心：将起始点固定在右侧 */
+    width: 0;
+    height: 1px;
+    background-color: #000;
+    transition: width 0.4s ease;
+}
+
+.gaze-link:hover::after, 
+.desire-link:hover::after {
+    width: 100%;    /* 悬停时向左延伸 */
+    left: auto;     /* 确保不会被左侧定位干扰 */
+}
+
 .work-tag .title {
     font-family: "Gill Sans", sans-serif; font-weight: 300; font-size: 13px;
     color: #ffffff; letter-spacing: 0.15em; white-space: nowrap;
