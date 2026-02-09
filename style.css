@@ -28,7 +28,7 @@ html, body {
     
     /* 保持你喜欢的构图参数 */
     transform: scale(1.4);
-    object-position: center -150%;
+    object-position: center;
     
     pointer-events: none;
 }
