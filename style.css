@@ -28,7 +28,7 @@ html, body {
     
     /* 保持你喜欢的构图参数 */
     transform: scale(1.4);
-    object-position: center;
+    object-position: center -120%;
     
     pointer-events: none;
 }
@@ -53,7 +53,7 @@ html, body {
     filter: brightness(0.5) contrast(1.2); 
     transition: opacity 1.5s ease;
     transform: scale(1.4);
-    object-position: center -200%;
+    object-position: center -120%;
     pointer-events: none;
 
     -webkit-mask-image: radial-gradient(circle at -500px -500px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px);
