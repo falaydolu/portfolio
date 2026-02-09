@@ -8,11 +8,19 @@ body, html {
 .viewport { position: relative; width: 100vw; height: 100vh; }
 
 .layer {
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* 强制填满视口，但保持你调好的位移逻辑 */
+    width: 100vw;
+    height: 100vh;
+    
     object-fit: cover;
-    transform: scale(1.4);
-    object-position: center -200%;
+    /* 保持你最喜欢的放大倍数 */
+    transform: scale(1.4); 
+    /* 关键：尝试将 -200% 改为固定的偏移或更温和的百分比，以防在不同屏幕露白 */
+    object-position: center -200%; 
+    
     pointer-events: none;
 }
 
