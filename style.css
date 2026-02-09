@@ -19,15 +19,16 @@ html, body {
     position: absolute;
     top: 0;
     left: 0;
-    /* 强制填满视口，但保持你调好的位移逻辑 */
+    /* 使用视口单位 vw/vh 替代百分比，强制撑满物理屏幕 */
     width: 100vw;
     height: 100vh;
     
+    /* 核心：object-fit: cover 会自动修剪溢出部分，确保绝对不露白 */
     object-fit: cover;
-    /* 保持你最喜欢的放大倍数 */
-    transform: scale(1.4); 
-    /* 关键：尝试将 -200% 改为固定的偏移或更温和的百分比，以防在不同屏幕露白 */
-    object-position: center -200%; 
+    
+    /* 保持你喜欢的构图参数 */
+    transform: scale(1.4);
+    object-position: center -200%;
     
     pointer-events: none;
 }
