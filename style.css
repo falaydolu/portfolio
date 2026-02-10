@@ -25,11 +25,9 @@ html, body {
     
     /* 核心：object-fit: cover 会自动修剪溢出部分，确保绝对不露白 */
     object-fit: cover;
-    
-    /* 保持你喜欢的构图参数 */
-    transform: scale(1.4);
-    object-position: center 50%;
-    
+    object-position: center center;
+    /* scale ensures no white edges on any screen; translateY shifts framing up */
+    transform: scale(1.4) translateY(8%);
     pointer-events: none;
 }
 
@@ -42,8 +40,8 @@ html, body {
     animation: drift 15s ease-in-out infinite;
 }
 @keyframes drift {
-    0%, 100% { transform: scale(1.4) translateX(0); }
-    50% { transform: scale(1.4) translateX(2%); }
+    0%, 100% { transform: scale(1.4) translateY(8%) translateX(0); }
+    50% { transform: scale(1.4) translateY(8%) translateX(2%); }
 }
 
 /* 交互层：加深处理 + 400px 柔和遮罩 */
@@ -53,6 +51,10 @@ html, body {
     opacity: 0; 
     filter: brightness(0.5) contrast(1.2); 
     transition: opacity 1.5s ease;
+    object-fit: cover;
+    object-position: center center;
+    /* scale ensures no white edges on any screen; translateY shifts framing up */
+    transform: scale(1.4) translateY(8%);
     pointer-events: none;
 
     /* 使用变量控制位置，初始设为看不见的地方 */
