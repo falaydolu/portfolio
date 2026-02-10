@@ -62,7 +62,7 @@ body, html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: -10vh; /* 【微调】调整整体画面上下位置 */
+    margin-top: 10vh; /* 【微调】调整整体画面上下位置 */
 }
 
 .work-media {
@@ -92,10 +92,7 @@ body, html {
 
 /* 3. 底部对齐的横线 */
 .slider-controls {
-    position: fixed;
-    bottom: 196px; /* 【对齐关键】须与 .work-footer 一致 */
-    left: 50%;
-    transform: translateX(-50%);
+    margin-top: 48px;
     display: flex;
     gap: 30px;
     font-size: 13px;
@@ -104,10 +101,7 @@ body, html {
 
 /* --- 底部信息栏总容器 --- */
 .work-footer {
-    position: fixed;
-    bottom: 121px;       /* 调整这个数值来整体上下移动底栏 */
-    left: 50%;
-    transform: translateX(-50%);
+    margin-top: 12px;
     width: 54vw;        
     display: flex;
     justify-content: space-between;
