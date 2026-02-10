@@ -1,166 +1,145 @@
-const revealLayer = document.querySelector('.interactive-reveal');
-const bodyImg = document.querySelector('.static-layer');
+var revealLayer = document.querySelector('.interactive-reveal');
+var bodyImg = document.querySelector('.static-layer');
 
-// 每个标签在 **原始图片** 上的位置（百分比）
-// 调整这些值来移动标签在图片上的锚点
-const points = [
-    { id: 'tag-language', imgX: 52, imgY: 61, mobileX: 52, mobileY: 50 },
-    { id: 'tag-gaze',     imgX: 42, imgY: 54, mobileX: 38, mobileY: 46 },
-    { id: 'tag-unspoken', imgX: 54, imgY: 45, mobileX: 54, mobileY: 38},
-    { id: 'tag-desire',   imgX: 30, imgY: 32, mobileX: 24, mobileY: 32 }
+var points = [
+    { id: 'tag-language', imgX: 52, imgY: 54, mobileX: 52, mobileY: 54, screenX: 0, screenY: 0 },
+    { id: 'tag-gaze',     imgX: 38, imgY: 45, mobileX: 38, mobileY: 45, screenX: 0, screenY: 0 },
+    { id: 'tag-unspoken', imgX: 54, imgY: 32, mobileX: 54, mobileY: 32, screenX: 0, screenY: 0 },
+    { id: 'tag-desire',   imgX: 21, imgY: 15, mobileX: 21, mobileY: 15, screenX: 0, screenY: 0 }
 ];
 
-/* ── 核心：把图片坐标 → 屏幕坐标 ── */
-function updateLabelPositions() {
-    const cw = window.innerWidth;
-    const ch = window.innerHeight;
-    const natW = bodyImg.naturalWidth;
-    const natH = bodyImg.naturalHeight;
-    if (!natW || !natH) return;
+/* debug panel - 确认修好后删除 */
+var debugEl = document.createElement('div');
+debugEl.style.cssText = 'position:fixed;bottom:80px;left:10px;z-index:9999;color:lime;font-size:11px;font-family:monospace;pointer-events:none;background:rgba(0,0,0,0.8);padding:8px;border-radius:4px;white-space:pre;max-width:90vw;';
+document.body.appendChild(debugEl);
+debugEl.textContent = 'debug ready';
 
-    // 1) object-fit: cover 的实际渲染尺寸与偏移
-    const containerRatio = cw / ch;
-    const imageRatio = natW / natH;
-    let rw, rh, ox, oy;
+function updateLabelPositions() {
+    var cw = window.innerWidth;
+    var ch = window.innerHeight;
+    var natW = bodyImg ? bodyImg.naturalWidth : 0;
+    var natH = bodyImg ? bodyImg.naturalHeight : 0;
+
+    if (!natW || !natH) {
+        debugEl.textContent = 'no image: ' + natW + 'x' + natH;
+        return;
+    }
+
+    var containerRatio = cw / ch;
+    var imageRatio = natW / natH;
+    var rw, rh, ox, oy;
 
     if (imageRatio > containerRatio) {
-        // 图片更宽 → 高度撑满，左右裁切
         rh = ch; rw = ch * imageRatio;
         ox = (cw - rw) / 2; oy = 0;
     } else {
-        // 图片更高 → 宽度撑满，上下裁切
         rw = cw; rh = cw / imageRatio;
         ox = 0; oy = (ch - rh) / 2;
     }
 
-    const centerX = cw / 2;
-    const centerY = ch / 2;
+    var centerX = cw / 2;
+    var centerY = ch / 2;
+    var isMobile = cw <= 768;
+    var scaleFactor = isMobile ? 1.1 : 1.4;
+    var info = 'img:' + natW + 'x' + natH + ' vp:' + cw + 'x' + ch + '\n';
 
-    points.forEach(p => {
-        const el = document.getElementById(p.id);
-        if (!el) return;
+    for (var i = 0; i < points.length; i++) {
+        var p = points[i];
+        var el = document.getElementById(p.id);
+        if (!el) continue;
 
-        // 图片上的百分比 → 容器内像素（未变换前）
-        let px = ox + (p.imgX / 100) * rw;
-        let py = oy + (p.imgY / 100) * rh;
+        var useX = isMobile ? p.mobileX : p.imgX;
+        var useY = isMobile ? p.mobileY : p.imgY;
+        var px = ox + (useX / 100) * rw;
+        var py = oy + (useY / 100) * rh;
 
-        // 2) 模拟 CSS transform: scale(1.4) translateY(-8%)
-        //    transform-origin 默认 center
-        //    执行顺序（右→左）：先 translateY，再 scale
-        let lx = px - centerX;
-        let ly = py - centerY;
-
-        ly -= 0.08 * ch;   // translateY(-8%)
-        const scaleFactor = window.innerWidth <= 768 ? 1 : 1.4;
+        var lx = px - centerX;
+        var ly = py - centerY;
+        ly -= 0.08 * ch;
         lx *= scaleFactor;
         ly *= scaleFactor;
 
-        const finalX = lx + centerX;
-        const finalY = ly + centerY;
-
-        el.style.left = finalX + 'px';
-        el.style.top  = finalY + 'px';
-    });
+        p.screenX = lx + centerX;
+        p.screenY = ly + centerY;
+        el.style.left = p.screenX + 'px';
+        el.style.top  = p.screenY + 'px';
+        info += p.id.replace('tag-','') + ':(' + Math.round(p.screenX) + ',' + Math.round(p.screenY) + ') ';
+    }
+    debugEl.textContent = info;
 }
 
-// 图片加载后计算 + 窗口缩放时重算
-if (bodyImg.complete) {
-    updateLabelPositions();
-} else {
-    bodyImg.addEventListener('load', updateLabelPositions);
+function tryInit() {
+    if (bodyImg && bodyImg.naturalWidth > 0) {
+        updateLabelPositions();
+    } else {
+        setTimeout(tryInit, 200);
+    }
 }
+tryInit();
+window.addEventListener('load', updateLabelPositions);
 window.addEventListener('resize', updateLabelPositions);
 
-/* ── 鼠标交互 ── */
-document.addEventListener('mousemove', (e) => {
-    const x = e.clientX;
-    const y = e.clientY;
+/* mouse (desktop) */
+document.addEventListener('mousemove', function(e) {
+    var x = e.clientX, y = e.clientY;
+    revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at ' + x + 'px ' + y + 'px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px)';
+    revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
 
-    // 遮罩跟随
-    const maskValue = `radial-gradient(circle at ${x}px ${y}px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px)`;
-    revealLayer.style.WebkitMaskImage = maskValue;
-    revealLayer.style.maskImage = maskValue;
-
-    // 距离感应（用像素距离，而非百分比）
-    const threshold = Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2) * 0.15;
-
-    points.forEach(p => {
-        const el = document.getElementById(p.id);
-        if (!el) return;
-
-        const rect = el.getBoundingClientRect();
-        const elCX = rect.left + rect.width / 2;
-        const elCY = rect.top  + rect.height / 2;
-
-        const dist = Math.sqrt((x - elCX) ** 2 + (y - elCY) ** 2);
-
-        if (dist < threshold) {
-            el.classList.add('active');
-        } else {
-            el.classList.remove('active');
-        }
-    });
+    var thr = Math.sqrt(window.innerWidth * window.innerWidth + window.innerHeight * window.innerHeight) * 0.15;
+    for (var i = 0; i < points.length; i++) {
+        var p = points[i], el = document.getElementById(p.id);
+        if (!el) continue;
+        var d = Math.sqrt((x - p.screenX) * (x - p.screenX) + (y - p.screenY) * (y - p.screenY));
+        if (d < thr) { el.classList.add('active'); } else { el.classList.remove('active'); }
+    }
 });
 
-document.addEventListener('mouseleave', () => {
-    const reset = `radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px)`;
-    revealLayer.style.WebkitMaskImage = reset;
-    revealLayer.style.maskImage = reset;
-    points.forEach(p => document.getElementById(p.id)?.classList.remove('active'));
+document.addEventListener('mouseleave', function() {
+    revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px)';
+    revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
+    for (var i = 0; i < points.length; i++) {
+        var el = document.getElementById(points[i].id);
+        if (el) el.classList.remove('active');
+    }
 });
 
-
-/* ── 触摸交互（手机端） ── */
-let fadeTimer = null;
-const mobileRadius = 200; // 手机端遮罩半径，比桌面小
+/* touch (mobile) */
+var fadeTimer = null;
+var mobileRadius = 200;
 
 function handleTouch(e) {
-    const touch = e.touches[0];
+    var touch = e.touches[0];
     if (!touch) return;
-    const x = touch.clientX;
-    const y = touch.clientY;
+    var x = touch.clientX, y = touch.clientY;
 
-    // 显示暗层
     revealLayer.classList.add('touching');
+    revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at ' + x + 'px ' + y + 'px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ' + mobileRadius + 'px)';
+    revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
 
-    // 遮罩跟随手指
-    const maskValue = `radial-gradient(circle at ${x}px ${y}px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ${mobileRadius}px)`;
-    revealLayer.style.WebkitMaskImage = maskValue;
-    revealLayer.style.maskImage = maskValue;
+    var thr = Math.sqrt(window.innerWidth * window.innerWidth + window.innerHeight * window.innerHeight) * 0.2;
+    var info = 'T:(' + Math.round(x) + ',' + Math.round(y) + ') thr:' + Math.round(thr) + '\n';
+    for (var i = 0; i < points.length; i++) {
+        var p = points[i], el = document.getElementById(p.id);
+        if (!el) continue;
+        var d = Math.sqrt((x - p.screenX) * (x - p.screenX) + (y - p.screenY) * (y - p.screenY));
+        info += p.id.replace('tag-','') + ':(' + Math.round(p.screenX) + ',' + Math.round(p.screenY) + ') d=' + Math.round(d) + (d < thr ? ' HIT' : '') + '\n';
+        if (d < thr) { el.classList.add('active'); } else { el.classList.remove('active'); }
+    }
+    debugEl.textContent = info;
 
-    // 距离感应：手指靠近标签时激活（手机端范围更大）
-    const threshold = Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2) * 0.2;
-    points.forEach(p => {
-        const el = document.getElementById(p.id);
-        if (!el) return;
-        const dist = Math.sqrt((x - p.screenX) ** 2 + (y - p.screenY) ** 2);
-        if (dist < threshold) {
-            el.classList.add('active');
-        } else {
-            el.classList.remove('active');
-        }
-    });
-
-    // 清除之前的淡出计时
     if (fadeTimer) clearTimeout(fadeTimer);
 }
 
-document.addEventListener('touchstart', (e) => {
-    handleTouch(e);
-}, { passive: true });
-
-document.addEventListener('touchmove', (e) => {
-    handleTouch(e);
-}, { passive: true });
-
-document.addEventListener('touchend', () => {
-    // 松手后 1.5 秒淡出
-    fadeTimer = setTimeout(() => {
+document.addEventListener('touchstart', handleTouch, { passive: true });
+document.addEventListener('touchmove', handleTouch, { passive: true });
+document.addEventListener('touchend', function() {
+    fadeTimer = setTimeout(function() {
         revealLayer.classList.remove('touching');
-        const reset = `radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ${mobileRadius}px)`;
-        revealLayer.style.WebkitMaskImage = reset;
-        revealLayer.style.maskImage = reset;
-        // 松手后标签也淡出
-        points.forEach(p => document.getElementById(p.id)?.classList.remove('active'));
+        revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ' + mobileRadius + 'px)';
+        revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
+        for (var i = 0; i < points.length; i++) {
+            var el = document.getElementById(points[i].id);
+            if (el) el.classList.remove('active');
+        }
     }, 1500);
 });
