@@ -114,17 +114,17 @@ body, html {
 /* ══════ 手机端适配 ══════ */
 @media (max-width: 768px) {
     .layer {
-        transform: scale(1.1) translateY(-8%);
+        transform: scale(1) translateY(-8%);
     }
     .moving-layer {
         animation: drift-mobile 15s ease-in-out infinite;
     }
     @keyframes drift-mobile {
-        0%, 100% { transform: scale(1.1) translateY(8%) translateX(0); }
-        50% { transform: scale(1.1) translateY(8%) translateX(2%); }
+        0%, 100% { transform: scale(1) translateY(8%) translateX(0); }
+        50% { transform: scale(1) translateY(8%) translateX(2%); }
     }
     .interactive-reveal {
-        transform: scale(1.1) translateY(8%);
+        transform: scale(1) translateY(8%);
     }
 
     /* 手机端：禁用 hover 触发暗层，改用 JS .touching */

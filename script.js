@@ -9,7 +9,12 @@ var points = [
     { id: 'tag-desire',   imgX: 30, imgY: 34, mobileX: 21, mobileY: 15, screenX: 0, screenY: 0 }
 ];
 
-/* ── 图片坐标 → 屏幕坐标 ── */
+/* debug - 确认后删 */
+var debugEl = document.createElement('div');
+debugEl.style.cssText = 'position:fixed;bottom:80px;left:10px;z-index:9999;color:lime;font-size:11px;font-family:monospace;pointer-events:none;background:rgba(0,0,0,0.85);padding:8px;border-radius:4px;white-space:pre;max-width:90vw;';
+document.body.appendChild(debugEl);
+debugEl.textContent = 'v4 loaded';
+
 function updateLabelPositions() {
     var cw = window.innerWidth;
     var ch = window.innerHeight;
@@ -68,7 +73,45 @@ tryInit();
 window.addEventListener('load', updateLabelPositions);
 window.addEventListener('resize', updateLabelPositions);
 
-/* ── 桌面端：用 CSS class "active" ── */
+/* ── 手机端强制显示/隐藏（用 setProperty + !important） ── */
+function mobileActivate(el) {
+    if (!el) return;
+    el.style.setProperty('opacity', '1', 'important');
+    el.style.setProperty('transition', 'none', 'important');
+    var line = el.querySelector('.line');
+    var title = el.querySelector('.title');
+    var link = el.querySelector('.tag-link');
+    if (line) {
+        line.style.setProperty('width', '50px', 'important');
+        line.style.setProperty('transition', 'none', 'important');
+    }
+    if (title) {
+        title.style.setProperty('opacity', '1', 'important');
+        title.style.setProperty('transition', 'none', 'important');
+    }
+    if (link) {
+        link.style.setProperty('pointer-events', 'auto', 'important');
+    }
+}
+
+function mobileDeactivate(el) {
+    if (!el) return;
+    el.style.setProperty('opacity', '0', 'important');
+    var line = el.querySelector('.line');
+    var title = el.querySelector('.title');
+    var link = el.querySelector('.tag-link');
+    if (line) line.style.setProperty('width', '0', 'important');
+    if (title) title.style.setProperty('opacity', '0', 'important');
+    if (link) link.style.setProperty('pointer-events', 'none', 'important');
+}
+
+function mobileDeactivateAll() {
+    for (var i = 0; i < points.length; i++) {
+        mobileDeactivate(document.getElementById(points[i].id));
+    }
+}
+
+/* ── 桌面端：原始 CSS class 方式 ── */
 var isTouching = false;
 
 document.addEventListener('mousemove', function(e) {
@@ -97,7 +140,7 @@ document.addEventListener('mouseleave', function() {
     }
 });
 
-/* ── 手机端：用 CSS class "mobile-active"（配合 !important 规则） ── */
+/* ── 手机端触摸 ── */
 var fadeTimer = null;
 var mobileRadius = 200;
 
@@ -112,16 +155,19 @@ function handleTouch(e) {
     revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
 
     var thr = Math.sqrt(window.innerWidth * window.innerWidth + window.innerHeight * window.innerHeight) * 0.2;
+    var hits = '';
     for (var i = 0; i < points.length; i++) {
         var p = points[i], el = document.getElementById(p.id);
         if (!el) continue;
         var d = Math.sqrt((x - p.screenX) * (x - p.screenX) + (y - p.screenY) * (y - p.screenY));
         if (d < thr) {
-            el.classList.add('mobile-active');
+            mobileActivate(el);
+            hits += p.id.replace('tag-','') + ' ';
         } else {
-            el.classList.remove('mobile-active');
+            mobileDeactivate(el);
         }
     }
+    debugEl.textContent = 'T:(' + Math.round(x) + ',' + Math.round(y) + ')\nhits: ' + (hits || 'none') + '\ncomputed: ' + (hits ? window.getComputedStyle(document.getElementById(points[0].id)).opacity : '-');
 
     if (fadeTimer) clearTimeout(fadeTimer);
 }
@@ -134,10 +180,6 @@ document.addEventListener('touchend', function() {
         revealLayer.classList.remove('touching');
         revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ' + mobileRadius + 'px)';
         revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
-        for (var i = 0; i < points.length; i++) {
-            var el = document.getElementById(points[i].id);
-            if (el) el.classList.remove('mobile-active');
-        }
+        mobileDeactivateAll();
     }, 3000);
 });
-
