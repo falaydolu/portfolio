@@ -4,10 +4,10 @@ const bodyImg = document.querySelector('.static-layer');
 // 每个标签在 **原始图片** 上的位置（百分比）
 // 调整这些值来移动标签在图片上的锚点
 const points = [
-    { id: 'tag-language', imgX: 52, imgY: 61 },
-    { id: 'tag-gaze',     imgX: 42, imgY: 54 },
-    { id: 'tag-unspoken', imgX: 54, imgY: 45 },
-    { id: 'tag-desire',   imgX: 30, imgY: 32 }
+    { id: 'tag-language', imgX: 52, imgY: 61, mobileX: 52, mobileY: 50 },
+    { id: 'tag-gaze',     imgX: 42, imgY: 54, mobileX: 38, mobileY: 46 },
+    { id: 'tag-unspoken', imgX: 54, imgY: 45, mobileX: 54, mobileY: 38},
+    { id: 'tag-desire',   imgX: 30, imgY: 32, mobileX: 24, mobileY: 32 }
 ];
 
 /* ── 核心：把图片坐标 → 屏幕坐标 ── */
