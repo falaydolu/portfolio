@@ -28,7 +28,7 @@ html, body {
     
     /* 保持你喜欢的构图参数 */
     transform: scale(1.4);
-    object-position: center -120%;
+    object-position: center 50%;
     
     pointer-events: none;
 }
@@ -53,8 +53,6 @@ html, body {
     opacity: 0; 
     filter: brightness(0.5) contrast(1.2); 
     transition: opacity 1.5s ease;
-    transform: scale(1.4);
-    object-position: center -200%;
     pointer-events: none;
 
     /* 使用变量控制位置，初始设为看不见的地方 */
