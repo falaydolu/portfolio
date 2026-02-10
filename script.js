@@ -79,8 +79,11 @@ tryInit();
 window.addEventListener('load', updateLabelPositions);
 window.addEventListener('resize', updateLabelPositions);
 
-/* mouse (desktop) */
+/* mouse (desktop) - 加触摸保护 */
+var isTouching = false;
+
 document.addEventListener('mousemove', function(e) {
+    if (isTouching) return; // 触摸期间忽略假鼠标事件
     var x = e.clientX, y = e.clientY;
     revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at ' + x + 'px ' + y + 'px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px)';
     revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
@@ -95,6 +98,7 @@ document.addEventListener('mousemove', function(e) {
 });
 
 document.addEventListener('mouseleave', function() {
+    if (isTouching) return;
     revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px)';
     revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
     for (var i = 0; i < points.length; i++) {
@@ -108,6 +112,7 @@ var fadeTimer = null;
 var mobileRadius = 200;
 
 function handleTouch(e) {
+    isTouching = true;
     var touch = e.touches[0];
     if (!touch) return;
     var x = touch.clientX, y = touch.clientY;
@@ -134,6 +139,7 @@ document.addEventListener('touchstart', handleTouch, { passive: true });
 document.addEventListener('touchmove', handleTouch, { passive: true });
 document.addEventListener('touchend', function() {
     fadeTimer = setTimeout(function() {
+        isTouching = false;
         revealLayer.classList.remove('touching');
         revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ' + mobileRadius + 'px)';
         revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
