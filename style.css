@@ -82,7 +82,7 @@ html, body {
 }
 .t1 { margin-right: 27px; } .t2 { margin-right: 27px; } .t3 { margin-right: 27px; }
 .t4 { margin-right: 27px; } .t5 { margin-right: 27px; }.t6 { margin-right: 27px; }
-.t7 { margin-right: 27px; }.t8 { margin-right: 27px; }
+.t7 { margin-right: 27px; }
 
 .top-right-nav {
     position: fixed;
@@ -194,7 +194,7 @@ html, body {
 
     /* 暗层：默认隐藏，触摸时由 JS 添加 .touching 类显示 */
     .viewport:hover .interactive-reveal { opacity: 0; }
-    .interactive-reveal.touching { opacity: 0.9; }
+    .viewport .interactive-reveal.touching { opacity: 0.9; }
 
     /* 底部文字缩小 */
     .floating-text {
