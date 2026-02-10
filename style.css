@@ -175,7 +175,7 @@ html, body {
 @media (max-width: 768px) {
     /* 缩小背景图 */
     .layer {
-        transform: scale(0.8) translateY(-8%);
+        transform: scale(0.9) translateY(-8%);
     }
     .moving-layer {
         animation: drift-mobile 15s ease-in-out infinite;
@@ -185,7 +185,7 @@ html, body {
         50% { transform: scale(1.15) translateY(-8%) translateX(2%); }
     }
     .interactive-reveal {
-        transform: scale(0.8) translateY(-8%);
+        transform: scale(0.9) translateY(-8%);
     }
 
     /* 标签始终显示 */
