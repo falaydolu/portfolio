@@ -128,6 +128,22 @@ function handleTouch(e) {
     revealLayer.style.WebkitMaskImage = maskValue;
     revealLayer.style.maskImage = maskValue;
 
+    // 距离感应：手指靠近标签时激活
+    const threshold = Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2) * 0.12;
+    points.forEach(p => {
+        const el = document.getElementById(p.id);
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const elCX = rect.left + rect.width / 2;
+        const elCY = rect.top + rect.height / 2;
+        const dist = Math.sqrt((x - elCX) ** 2 + (y - elCY) ** 2);
+        if (dist < threshold) {
+            el.classList.add('active');
+        } else {
+            el.classList.remove('active');
+        }
+    });
+
     // 清除之前的淡出计时
     if (fadeTimer) clearTimeout(fadeTimer);
 }
@@ -147,6 +163,7 @@ document.addEventListener('touchend', () => {
         const reset = `radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ${mobileRadius}px)`;
         revealLayer.style.WebkitMaskImage = reset;
         revealLayer.style.maskImage = reset;
+        points.forEach(p => document.getElementById(p.id)?.classList.remove('active'));
     }, 1500);
 });
 

@@ -12,6 +12,7 @@ html, body {
     position: relative;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
@@ -22,6 +23,8 @@ html, body {
     /* 使用视口单位 vw/vh 替代百分比，强制撑满物理屏幕 */
     width: 100vw;
     height: 100vh;
+    min-width: 100vw; 
+    min-height: 100vh;
     
     /* 核心：object-fit: cover 会自动修剪溢出部分，确保绝对不露白 */
     object-fit: cover;
@@ -189,12 +192,6 @@ html, body {
     }
 
     /* 标签始终显示 */
-    .work-tag {
-        opacity: 1 !important;
-        transition: none;
-    }
-    .work-tag .tag-link { pointer-events: auto; }
-    .work-tag .line { width: 50px; }
     .work-tag .title {
         opacity: 1; font-size: 11px;
         transition: none;
