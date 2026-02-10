@@ -1,63 +1,109 @@
-/**
- * Vivian Lu Portfolio - Landing Page Logic
- * 处理全屏水墨遮罩跟随及标签距离感应
- */
-
-const viewport = document.querySelector('.viewport');
 const revealLayer = document.querySelector('.interactive-reveal');
+const bodyImg = document.querySelector('.static-layer');
 
-// 1. 坐标点配置 (必须与 index.html 中的 style 百分比完全对应)
+// 每个标签在 **原始图片** 上的位置（百分比）
+// 调整这些值来移动标签在图片上的锚点
 const points = [
-    { id: 'tag-language', x: 52, y: 54 },
-    { id: 'tag-gaze',     x: 38, y: 45 }, // 对应 gaze.html
-    { id: 'tag-unspoken', x: 54, y: 32 }, // 对应 silenced.html
-    { id: 'tag-desire',   x: 24, y: 15 }  // 对应 desire.html
+    { id: 'tag-language', imgX: 52, imgY: 61 },
+    { id: 'tag-gaze',     imgX: 42, imgY: 54 },
+    { id: 'tag-unspoken', imgX: 54, imgY: 45 },
+    { id: 'tag-desire',   imgX: 30, imgY: 32 }
 ];
 
-// 2. 鼠标移动监听
-viewport.addEventListener('mousemove', (e) => {
-    const rect = viewport.getBoundingClientRect();
-    
-    // 计算鼠标在当前屏幕中的百分比位置 (0-100)
-    // 使用 rect 计算是为了适配 iMac 等高分屏和各种缩放比例
-    const xPercent = ((e.clientX - rect.left) / rect.width) * 100;
-    const yPercent = ((e.clientY - rect.top) / rect.height) * 100;
+/* ── 核心：把图片坐标 → 屏幕坐标 ── */
+function updateLabelPositions() {
+    const cw = window.innerWidth;
+    const ch = window.innerHeight;
+    const natW = bodyImg.naturalWidth;
+    const natH = bodyImg.naturalHeight;
+    if (!natW || !natH) return;
 
-    // A. 更新遮罩位置 (使用 CSS 变量提高性能)
-    // 遮罩半径设为 250px 以保持“水墨感”，如果觉得太小可以改成 400px
-    const maskValue = `radial-gradient(circle at ${xPercent}% ${yPercent}%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 250px)`;
+    // 1) object-fit: cover 的实际渲染尺寸与偏移
+    const containerRatio = cw / ch;
+    const imageRatio = natW / natH;
+    let rw, rh, ox, oy;
+
+    if (imageRatio > containerRatio) {
+        // 图片更宽 → 高度撑满，左右裁切
+        rh = ch; rw = ch * imageRatio;
+        ox = (cw - rw) / 2; oy = 0;
+    } else {
+        // 图片更高 → 宽度撑满，上下裁切
+        rw = cw; rh = cw / imageRatio;
+        ox = 0; oy = (ch - rh) / 2;
+    }
+
+    const centerX = cw / 2;
+    const centerY = ch / 2;
+
+    points.forEach(p => {
+        const el = document.getElementById(p.id);
+        if (!el) return;
+
+        // 图片上的百分比 → 容器内像素（未变换前）
+        let px = ox + (p.imgX / 100) * rw;
+        let py = oy + (p.imgY / 100) * rh;
+
+        // 2) 模拟 CSS transform: scale(1.4) translateY(-8%)
+        //    transform-origin 默认 center
+        //    执行顺序（右→左）：先 translateY，再 scale
+        let lx = px - centerX;
+        let ly = py - centerY;
+
+        ly -= 0.08 * ch;   // translateY(-8%)
+        lx *= 1.4;         // scale(1.4)
+        ly *= 1.4;
+
+        const finalX = lx + centerX;
+        const finalY = ly + centerY;
+
+        el.style.left = finalX + 'px';
+        el.style.top  = finalY + 'px';
+    });
+}
+
+// 图片加载后计算 + 窗口缩放时重算
+if (bodyImg.complete) {
+    updateLabelPositions();
+} else {
+    bodyImg.addEventListener('load', updateLabelPositions);
+}
+window.addEventListener('resize', updateLabelPositions);
+
+/* ── 鼠标交互 ── */
+document.addEventListener('mousemove', (e) => {
+    const x = e.clientX;
+    const y = e.clientY;
+
+    // 遮罩跟随
+    const maskValue = `radial-gradient(circle at ${x}px ${y}px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px)`;
     revealLayer.style.WebkitMaskImage = maskValue;
     revealLayer.style.maskImage = maskValue;
 
-    // B. 距离感应激活标签
-    points.forEach(pt => {
-        const tag = document.getElementById(pt.id);
-        if (!tag) return;
+    // 距离感应（用像素距离，而非百分比）
+    const threshold = Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2) * 0.15;
 
-        // 计算鼠标百分比坐标与标签设定位之间的欧几里得距离
-        const dist = Math.sqrt(
-            Math.pow(xPercent - pt.x, 2) + 
-            Math.pow(yPercent - pt.y, 2)
-        );
+    points.forEach(p => {
+        const el = document.getElementById(p.id);
+        if (!el) return;
 
-        // 当鼠标进入标签 8% 的距离范围内时激活
-        if (dist < 8) {
-            tag.classList.add('active');
+        const rect = el.getBoundingClientRect();
+        const elCX = rect.left + rect.width / 2;
+        const elCY = rect.top  + rect.height / 2;
+
+        const dist = Math.sqrt((x - elCX) ** 2 + (y - elCY) ** 2);
+
+        if (dist < threshold) {
+            el.classList.add('active');
         } else {
-            tag.classList.remove('active');
+            el.classList.remove('active');
         }
     });
 });
 
-// 3. 鼠标离开视口时重置，防止遮罩残留在屏幕边缘
-viewport.addEventListener('mouseleave', () => {
-    const hiddenMask = `radial-gradient(circle at -100% -100%, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 250px)`;
-    revealLayer.style.WebkitMaskImage = hiddenMask;
-    revealLayer.style.maskImage = hiddenMask;
-    
-    // 移除所有标签的激活状态
-    points.forEach(pt => {
-        const tag = document.getElementById(pt.id);
-        if (tag) tag.classList.remove('active');
-    });
+document.addEventListener('mouseleave', () => {
+    const reset = `radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px)`;
+    revealLayer.style.WebkitMaskImage = reset;
+    revealLayer.style.maskImage = reset;
+    points.forEach(p => document.getElementById(p.id)?.classList.remove('active'));
 });
