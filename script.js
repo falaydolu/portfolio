@@ -51,7 +51,7 @@ function updateLabelPositions() {
         let ly = py - centerY;
 
         ly -= 0.08 * ch;   // translateY(-8%)
-        const scaleFactor = window.innerWidth <= 768 ? 0.9 : 1.4;
+        const scaleFactor = window.innerWidth <= 768 ? 1.1 : 1.4;
         lx *= scaleFactor;
         ly *= scaleFactor;
 
