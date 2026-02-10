@@ -82,7 +82,7 @@ html, body {
 }
 .t1 { margin-right: 27px; } .t2 { margin-right: 27px; } .t3 { margin-right: 27px; }
 .t4 { margin-right: 27px; } .t5 { margin-right: 27px; }.t6 { margin-right: 27px; }
-.t7 { margin-right: 27px; }
+.t7 { margin-right: 27px; }.t8 { margin-right: 27px; }
 
 .top-right-nav {
     position: fixed;
@@ -201,7 +201,7 @@ html, body {
         font-size: 12px; left: 50%; top: 94%;
         transform: translate(-50%, -50%);
     }
-    .t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8 { margin-right: 12px; }
+    .t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8 { margin-right: 8px; }
 
     /* 导航缩小 */
     .top-right-nav { top: 20px; right: 20px; gap: 18px; }

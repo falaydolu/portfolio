@@ -128,15 +128,12 @@ function handleTouch(e) {
     revealLayer.style.WebkitMaskImage = maskValue;
     revealLayer.style.maskImage = maskValue;
 
-    // 距离感应：手指靠近标签时激活
-    const threshold = Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2) * 0.12;
+    // 距离感应：手指靠近标签时激活（手机端范围更大）
+    const threshold = Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2) * 0.2;
     points.forEach(p => {
         const el = document.getElementById(p.id);
         if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const elCX = rect.left + rect.width / 2;
-        const elCY = rect.top + rect.height / 2;
-        const dist = Math.sqrt((x - elCX) ** 2 + (y - elCY) ** 2);
+        const dist = Math.sqrt((x - p.screenX) ** 2 + (y - p.screenY) ** 2);
         if (dist < threshold) {
             el.classList.add('active');
         } else {
