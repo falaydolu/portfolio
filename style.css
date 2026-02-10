@@ -170,7 +170,24 @@ html, body {
     transform: scaleX(1) !important;
 }
 
+
+
 @media (max-width: 768px) {
+    /* 缩小背景图 */
+    .layer {
+        transform: scale(1.15) translateY(-8%);
+    }
+    .moving-layer {
+        animation: drift-mobile 15s ease-in-out infinite;
+    }
+    @keyframes drift-mobile {
+        0%, 100% { transform: scale(1.15) translateY(-8%) translateX(0); }
+        50% { transform: scale(1.15) translateY(-8%) translateX(2%); }
+    }
+    .interactive-reveal {
+        transform: scale(1.15) translateY(-8%);
+    }
+    
     /* 标签始终显示 */
     .work-tag {
         opacity: 1 !important;
