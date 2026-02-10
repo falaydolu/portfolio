@@ -110,7 +110,7 @@ document.addEventListener('mouseleave', () => {
 });
 
 
-
+/* ── 触摸交互（手机端） ── */
 let fadeTimer = null;
 const mobileRadius = 200; // 手机端遮罩半径，比桌面小
 
@@ -163,8 +163,7 @@ document.addEventListener('touchend', () => {
         const reset = `radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ${mobileRadius}px)`;
         revealLayer.style.WebkitMaskImage = reset;
         revealLayer.style.maskImage = reset;
+        // 松手后标签也淡出
         points.forEach(p => document.getElementById(p.id)?.classList.remove('active'));
     }, 1500);
 });
-
-

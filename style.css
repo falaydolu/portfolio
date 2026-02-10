@@ -118,11 +118,6 @@ html, body {
     cursor: crosshair;
 }
 
-.work-tag {
-    position: absolute; opacity: 0; z-index: 30;
-    /* 消失时的极慢余韵 */
-    transition: opacity 2.5s ease; 
-}
 
 .work-tag .line {
     width: 0; height: 1px; background: rgba(255, 255, 255, 0.8);
