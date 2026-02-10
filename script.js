@@ -107,3 +107,46 @@ document.addEventListener('mouseleave', () => {
     revealLayer.style.maskImage = reset;
     points.forEach(p => document.getElementById(p.id)?.classList.remove('active'));
 });
+
+
+
+let fadeTimer = null;
+const mobileRadius = 200; // 手机端遮罩半径，比桌面小
+
+function handleTouch(e) {
+    const touch = e.touches[0];
+    if (!touch) return;
+    const x = touch.clientX;
+    const y = touch.clientY;
+
+    // 显示暗层
+    revealLayer.classList.add('touching');
+
+    // 遮罩跟随手指
+    const maskValue = `radial-gradient(circle at ${x}px ${y}px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ${mobileRadius}px)`;
+    revealLayer.style.WebkitMaskImage = maskValue;
+    revealLayer.style.maskImage = maskValue;
+
+    // 清除之前的淡出计时
+    if (fadeTimer) clearTimeout(fadeTimer);
+}
+
+document.addEventListener('touchstart', (e) => {
+    handleTouch(e);
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => {
+    handleTouch(e);
+}, { passive: true });
+
+document.addEventListener('touchend', () => {
+    // 松手后 1.5 秒淡出
+    fadeTimer = setTimeout(() => {
+        revealLayer.classList.remove('touching');
+        const reset = `radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ${mobileRadius}px)`;
+        revealLayer.style.WebkitMaskImage = reset;
+        revealLayer.style.maskImage = reset;
+    }, 1500);
+});
+
+

@@ -169,3 +169,32 @@ html, body {
 .work-tag.active.right-pull .line {
     transform: scaleX(1) !important;
 }
+
+@media (max-width: 768px) {
+    /* 标签始终显示 */
+    .work-tag {
+        opacity: 1 !important;
+        transition: none;
+    }
+    .work-tag .tag-link { pointer-events: auto; }
+    .work-tag .line { width: 50px; }
+    .work-tag .title {
+        opacity: 1; font-size: 11px;
+        transition: none;
+    }
+
+    /* 暗层：默认隐藏，触摸时由 JS 添加 .touching 类显示 */
+    .viewport:hover .interactive-reveal { opacity: 0; }
+    .interactive-reveal.touching { opacity: 0.9; }
+
+    /* 底部文字缩小 */
+    .floating-text {
+        font-size: 12px; left: 50%; top: 94%;
+        transform: translate(-50%, -50%);
+    }
+    .t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8 { margin-right: 12px; }
+
+    /* 导航缩小 */
+    .top-right-nav { top: 20px; right: 20px; gap: 18px; }
+    .nav-item { font-size: 11px; }
+}
