@@ -47,21 +47,26 @@ html, body {
 }
 
 /* 交互层：加深处理 + 400px 柔和遮罩 */
+/* 交互层：修正遮罩逻辑 */
 .interactive-reveal {
-    z-index: 20; opacity: 0; 
-    /* 加深图片效果 */
+    z-index: 20; 
+    opacity: 0; 
     filter: brightness(0.5) contrast(1.2); 
     transition: opacity 1.5s ease;
     transform: scale(1.4);
-    object-position: center -120%;
+    object-position: center -200%;
     pointer-events: none;
 
-    -webkit-mask-image: radial-gradient(circle at -500px -500px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px);
-    mask-image: radial-gradient(circle at -500px -500px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px);
+    /* 使用变量控制位置，初始设为看不见的地方 */
+    -webkit-mask-image: radial-gradient(circle at var(--mouse-x, -100%) var(--mouse-y, -100%), rgba(0,0,0,1) 0%, rgba(0,0,0,0) 250px);
+    mask-image: radial-gradient(circle at var(--mouse-x, -100%) var(--mouse-y, -100%), rgba(0,0,0,1) 0%, rgba(0,0,0,0) 250px);
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 }
-.viewport:hover .interactive-reveal { opacity: 0.9; }
+
+.viewport:hover .interactive-reveal { 
+    opacity: 0.9; /* 鼠标进入时显示，但只有遮罩圆圈内可见 */
+}
 
 /* 静态文字样式 */
 .floating-text {
