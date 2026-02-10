@@ -114,7 +114,7 @@ body, html {
 /* ══════ 手机端适配 ══════ */
 @media (max-width: 768px) {
     .layer {
-        transform: scale(1) translateY(-8%);
+        transform: scale(1) translateY(8%);
     }
     .moving-layer {
         animation: drift-mobile 15s ease-in-out infinite;
