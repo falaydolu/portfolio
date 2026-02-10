@@ -169,30 +169,37 @@ html, body {
 }
 
 
-
+/* ══════ 手机端适配 ══════ */
 @media (max-width: 768px) {
     /* 缩小背景图 */
     .layer {
-        transform: scale(1) translateY(-8%);
+        transform: scale(1.1) translateY(-8%);
     }
     .moving-layer {
         animation: drift-mobile 15s ease-in-out infinite;
     }
     @keyframes drift-mobile {
-        0%, 100% { transform: scale(1.15) translateY(-8%) translateX(0); }
-        50% { transform: scale(1.15) translateY(-8%) translateX(2%); }
+        0%, 100% { transform: scale(1.1) translateY(-8%) translateX(0); }
+        50% { transform: scale(1.1) translateY(-8%) translateX(2%); }
     }
     .interactive-reveal {
-        transform: scale(1) translateY(-8%);
+        transform: scale(1.1) translateY(-8%);
     }
-
-    /* 标签始终显示 */
+    /* 标签：保持隐藏，触摸靠近时由 JS 激活 */
     .work-tag .title {
-        opacity: 1; font-size: 11px;
-        transition: none;
+        font-size: 11px;
+    }
+    .work-tag.active .tag-link { pointer-events: auto; }
+
+    /* 手机端加速标签动画 */
+    .work-tag.active { transition: opacity 0.3s ease; }
+    .work-tag .line { transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+    .work-tag .title { transition: opacity 0.3s ease; }
+    .work-tag.active .title {
+        transition: opacity 0.3s ease 0.2s;
     }
 
-    /* 暗层：默认隐藏，触摸时由 JS 添加 .touching 类显示 */
+    /* 暗层：禁用 hover，改由 JS .touching 类控制 */
     .viewport:hover .interactive-reveal { opacity: 0; }
     .viewport .interactive-reveal.touching { opacity: 0.9; }
 
@@ -201,7 +208,7 @@ html, body {
         font-size: 12px; left: 50%; top: 94%;
         transform: translate(-50%, -50%);
     }
-    .t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8 { margin-right: 8px; }
+    .t1, .t2, .t3, .t4, .t5, .t6, .t7, .t8 { margin-right: 12px; }
 
     /* 导航缩小 */
     .top-right-nav { top: 20px; right: 20px; gap: 18px; }

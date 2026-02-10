@@ -141,5 +141,5 @@ document.addEventListener('touchend', function() {
             var el = document.getElementById(points[i].id);
             if (el) el.classList.remove('active');
         }
-    }, 1500);
+    }, 3000);
 });
