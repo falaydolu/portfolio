@@ -3,10 +3,10 @@ var bodyImg = document.querySelector('.static-layer');
 var isMobile = window.innerWidth <= 768;
 
 var points = [
-    { id: 'tag-language', imgX: 50, imgY: 62, mobileX: 52, mobileY: 54, screenX: 0, screenY: 0 },
-    { id: 'tag-gaze',     imgX: 42, imgY: 53, mobileX: 38, mobileY: 45, screenX: 0, screenY: 0 },
-    { id: 'tag-unspoken', imgX: 53, imgY: 45, mobileX: 54, mobileY: 32, screenX: 0, screenY: 0 },
-    { id: 'tag-desire',   imgX: 30, imgY: 34, mobileX: 21, mobileY: 15, screenX: 0, screenY: 0 }
+    { id: 'tag-language', imgX: 50, imgY: 62, mobileX: 52, mobileY: 64, screenX: 0, screenY: 0 },
+    { id: 'tag-gaze',     imgX: 42, imgY: 53, mobileX: 38, mobileY: 55, screenX: 0, screenY: 0 },
+    { id: 'tag-unspoken', imgX: 53, imgY: 45, mobileX: 54, mobileY: 42, screenX: 0, screenY: 0 },
+    { id: 'tag-desire',   imgX: 30, imgY: 34, mobileX: 32, mobileY: 15, screenX: 0, screenY: 0 }
 ];
 
 /* debug - 确认后删 */
