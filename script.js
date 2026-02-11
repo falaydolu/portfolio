@@ -6,14 +6,9 @@ var points = [
     { id: 'tag-language', imgX: 50, imgY: 62, mobileX: 52, mobileY: 64, screenX: 0, screenY: 0 },
     { id: 'tag-gaze',     imgX: 42, imgY: 53, mobileX: 38, mobileY: 55, screenX: 0, screenY: 0 },
     { id: 'tag-unspoken', imgX: 53, imgY: 45, mobileX: 54, mobileY: 42, screenX: 0, screenY: 0 },
-    { id: 'tag-desire',   imgX: 30, imgY: 34, mobileX: 32, mobileY: 15, screenX: 0, screenY: 0 }
+    { id: 'tag-desire',   imgX: 30, imgY: 34, mobileX: 48, mobileY: 78, screenX: 0, screenY: 0 }
 ];
 
-/* debug - 确认后删 */
-var debugEl = document.createElement('div');
-debugEl.style.cssText = 'position:fixed;bottom:80px;left:10px;z-index:9999;color:lime;font-size:11px;font-family:monospace;pointer-events:none;background:rgba(0,0,0,0.85);padding:8px;border-radius:4px;white-space:pre;max-width:90vw;';
-document.body.appendChild(debugEl);
-debugEl.textContent = 'v4 loaded';
 
 function updateLabelPositions() {
     var cw = window.innerWidth;
