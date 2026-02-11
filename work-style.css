@@ -180,3 +180,48 @@ body, html {
     opacity: 0.6;
     transition: opacity 0.3s;
 }
+
+
+
+/* ══════ 手机端适配 ══════ */
+@media (max-width: 768px) {
+    .back-home { top: 20px; left: 20px; }
+
+    .media-container {
+        width: calc(100vw - 40px);  /* 左右各 20px，与 Close / CONTACT 对齐 */
+        height: auto;
+        margin-top: 0;
+    }
+
+    .work-media {
+        max-height: 50vh !important;
+        max-width: 100% !important;
+    }
+
+    #main-video {
+        max-height: 50vh;
+        width: 100%;
+    }
+
+    #main-image {
+        max-height: 50vh;
+        max-width: 100%;
+    }
+
+    .slider-controls {
+        position: static;
+        transform: none;
+        margin-top: 16px;
+    }
+
+    .work-footer {
+        position: static;
+        transform: none;
+        width: calc(100vw - 40px);
+        margin-top: 12px;
+    }
+
+    .work-title { font-size: 12px; }
+    .work-details p { font-size: 10px; }
+    .footer-right .context-link { font-size: 12px; }
+}
