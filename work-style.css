@@ -204,7 +204,7 @@ body, html {
     .media-container {
         width: calc(100vw - 40px);
         height: auto;
-        margin-top: -10vh;
+        margin-top: 5vh;
         display: flex;
         flex-direction: column;
         align-items: center;
