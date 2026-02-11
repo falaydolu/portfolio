@@ -6,7 +6,7 @@ var points = [
     { id: 'tag-language', imgX: 50, imgY: 62, mobileX: 52, mobileY: 64, screenX: 0, screenY: 0 },
     { id: 'tag-gaze',     imgX: 42, imgY: 53, mobileX: 38, mobileY: 55, screenX: 0, screenY: 0 },
     { id: 'tag-unspoken', imgX: 53, imgY: 45, mobileX: 54, mobileY: 42, screenX: 0, screenY: 0 },
-    { id: 'tag-desire',   imgX: 30, imgY: 34, mobileX: 48, mobileY: 78, screenX: 0, screenY: 0 }
+    { id: 'tag-desire',   imgX: 30, imgY: 34, mobileX: 42, mobileY: 84, screenX: 0, screenY: 0 }
 ];
 
 

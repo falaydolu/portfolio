@@ -2,39 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>DON'T LOOK AT ME | Vivian Lu</title>
     <link rel="stylesheet" href="work-style.css">
     <style>
-    /* 强制填满容器，消除白边 */
-    .force-sync {
-        width: 75vw !important; 
-        height: 55vh !important;
-        object-fit: cover !important; /* 核心：cover 会裁剪并填满，消除白边 */
-    }
-    
-    /* 7号竖图：保持比例，不拉伸 */
     .natural-size {
         width: auto !important;
         height: auto !important;
         max-height: 55vh !important;
         object-fit: contain !important;
     }
-</style>
+    </style>
 </head>
 <body>
 
-    <nav class="top-right-nav-work">
-        <a href="about.html" class="nav-item-work">ABOUT</a>
-        <a href="contact.html" class="nav-item-work">CONTACT</a>
-    </nav>
-    
     <a href="index.html" class="back-home">Close</a>
+    <div class="top-right-nav">
+        <a href="about.html" class="nav-item">About</a>
+        <a href="contact.html" class="nav-item">Contact</a>
+    </div>
 
     <div class="main-content">
         <div class="media-container">
-            <video id="main-video" class="work-media force-sync" loop playsinline controls controlsList="nodownload" oncontextmenu="return false;">
-            <source src="dont_look_at_me/1.mp4" type="video/mp4"> 
+            <video id="main-video" class="work-media" loop playsinline controls controlsList="nodownload" oncontextmenu="return false;">
+            <source src="dont_look_at_me/1.mp4" type="video/mp4">
         </video>
             
             <img id="main-image" src="" alt="Work Gallery" class="work-media" style="display: none;">
@@ -53,7 +44,7 @@
                     <p>2025</p>
                     <p>Interactive Installation</p>
                     <p>Wax, robotic arm, heat gun, camera, mix material</p>
-                    <p>120 x 120 x 200cm</p>
+                    <p>150 x 150 x 250cm</p>
                 </div>
             </div>
             <div class="footer-right">
@@ -65,18 +56,27 @@
 <script>
     let currentIndex = 1;
     const totalMedia = 8;
-    const folder = "dont_look_at_me/"; // 使用你改好的新路径
+    const folder = "dont_look_at_me/";
 
     const videoEl = document.getElementById('main-video');
     const imageEl = document.getElementById('main-image');
     const indicator = document.getElementById('page-indicator');
 
+    function syncImageSize() {
+        const rect = videoEl.getBoundingClientRect();
+        if (rect.width > 0) {
+            imageEl.style.width = rect.width + "px";
+            imageEl.style.height = rect.height + "px";
+        }
+    }
+
     function changeMedia(direction) {
+        syncImageSize();
         currentIndex += direction;
         if (currentIndex < 1) currentIndex = totalMedia;
         if (currentIndex > totalMedia) currentIndex = 1;
 
-        indicator.innerText = currentIndex + "/8";
+        indicator.innerText = currentIndex + "/" + totalMedia;
 
         if (currentIndex === 1) {
             imageEl.style.display = "none";
@@ -88,20 +88,18 @@
             imageEl.style.display = "block";
             imageEl.src = folder + currentIndex + ".png";
 
-            // 先移除旧状态
-            imageEl.classList.remove('force-sync', 'natural-size');
-
+            imageEl.classList.remove('natural-size');
             if (currentIndex === 7) {
-                // 7号图特殊对待
+                imageEl.style.width = "auto";
+                imageEl.style.height = "auto";
                 imageEl.classList.add('natural-size');
-            } else {
-                // 2,3,4,5,6 和 8号全部强制填满
-                imageEl.classList.add('force-sync');
             }
         }
     }
 
-    // 初始交互激活视频
+    window.addEventListener('resize', syncImageSize);
+    videoEl.addEventListener('loadedmetadata', syncImageSize);
+
     window.addEventListener('click', () => {
         if (currentIndex === 1 && videoEl.paused) videoEl.play();
     }, { once: true });

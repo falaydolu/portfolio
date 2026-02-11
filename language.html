@@ -2,22 +2,21 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Song of Ineffable | Vivian Lu</title>
     <link rel="stylesheet" href="work-style.css">
 </head>
 <body>
 
-    <nav class="top-right-nav-work">
-        <a href="about.html" class="nav-item-work">ABOUT</a>
-        <a href="contact.html" class="nav-item-work">CONTACT</a>
-    </nav>
-
     <a href="index.html" class="back-home">Close</a>
+    <div class="top-right-nav">
+        <a href="about.html" class="nav-item">About</a>
+        <a href="contact.html" class="nav-item">Contact</a>
+    </div>
 
     <div class="main-content">
         <div class="media-container">
-            <video id="main-video" class="work-media force-sync" loop playsinline controls controlsList="nodownload" oncontextmenu="return false;">
+            <video id="main-video" class="work-media" loop playsinline controls controlsList="nodownload" oncontextmenu="return false;">
             <source src="song of ineffable/1.mp4" type="video/mp4">
         </video>
             
@@ -55,9 +54,7 @@
     const imageEl = document.getElementById('main-image');
     const indicator = document.getElementById('page-indicator');
 
-    // --- 新增：动态同步尺寸函数 ---
     function syncImageSize() {
-        // 获取视频实际在屏幕上显示的宽高
         const rect = videoEl.getBoundingClientRect();
         if (rect.width > 0) {
             imageEl.style.width = rect.width + "px";
@@ -66,9 +63,7 @@
     }
 
     function changeMedia(direction) {
-        // 切换前先确保同步一次尺寸
         syncImageSize();
-
         currentIndex += direction;
         if (currentIndex < 1) currentIndex = totalMedia;
         if (currentIndex > totalMedia) currentIndex = 1;
@@ -87,10 +82,7 @@
         }
     }
 
-    // 窗口缩放时也要重新计算
     window.addEventListener('resize', syncImageSize);
-
-    // 视频加载完成后立即同步一次
     videoEl.addEventListener('loadedmetadata', syncImageSize);
 
     window.addEventListener('click', () => {
