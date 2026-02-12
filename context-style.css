@@ -72,7 +72,7 @@ body, html {
 
 /* 响应式：针对手机端缩小间距 */
 @media (max-width: 768px) {
-    .context-container { margin: 100px 20px; padding: 0; }
+    .context-container { margin: 100px 40px; padding: 0; }
     .context-header h1 { font-size: 24px; }
     .content-block { margin-bottom: 60px; }
 }
