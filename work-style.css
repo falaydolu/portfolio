@@ -63,7 +63,7 @@ body, html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: -10vh; /* 【微调】调整整体画面上下位置 */
+    margin-top: 0;
 }
 
 .work-media {
@@ -91,29 +91,25 @@ body, html {
     object-fit: cover; /* 强行填满 JS 计算出的视频区域 */
 }
 
-/* 3. 底部对齐的横线 */
+/* --- 底部信息栏总容器（三栏：标题 | 翻页 | CONTEXT） --- */
+.work-footer {
+    width: 54vw;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
+    margin-top: 20px;
+}
+
+.footer-left { justify-self: start; }
+.footer-center { justify-self: center; }
+.footer-right { justify-self: end; }
+
+/* 翻页控件 */
 .slider-controls {
-    position: fixed;
-    bottom: 196px; /* 【对齐关键】须与 .work-footer 一致 */
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
     gap: 30px;
     font-size: 13px;
     z-index: 50;
-}
-
-/* --- 底部信息栏总容器 --- */
-.work-footer {
-    position: fixed;
-    bottom: 121px;       /* 调整这个数值来整体上下移动底栏 */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 54vw;        
-    display: flex;
-    justify-content: space-between;
-    /* 关键修正：改为 baseline 对齐，让文字的“脚”站在同一条线上 */
-    align-items: baseline; 
 }
 
 /* --- 左侧：作品标题 --- */
@@ -188,8 +184,6 @@ body, html {
     transition: opacity 0.3s;
 }
 
-
-
 /* ══════ 手机端适配 ══════ */
 @media (max-width: 768px) {
     .back-home { top: 20px; left: 20px; font-size: 11px; }
@@ -204,7 +198,7 @@ body, html {
     .media-container {
         width: calc(100vw - 40px);
         height: auto;
-        margin-top: -10vh;
+        margin-top: -5vh;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -226,16 +220,12 @@ body, html {
     }
 
     .slider-controls {
-        position: static;
-        transform: none;
         margin-top: 16px;
     }
 
     .work-footer {
-        position: static;
-        transform: none;
         width: calc(100vw - 40px);
-        margin-top: 18px;
+        margin-top: 12px;
     }
 
     .work-title { font-size: 12px; }
