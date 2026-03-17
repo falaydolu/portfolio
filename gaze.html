@@ -12,6 +12,9 @@
         max-height: 55vh !important;
         object-fit: contain !important;
     }
+    #main-video {
+        object-fit: cover !important;
+    }
     </style>
 </head>
 <body>
@@ -25,11 +28,9 @@
     <div class="main-content">
         <div class="media-container">
             <video id="main-video" class="work-media" loop playsinline controls controlsList="nodownload" oncontextmenu="return false;">
-            <source src="dont_look_at_me/1.mp4" type="video/mp4">
+            <source src="dont_look_at_me/1.MP4" type="video/mp4">
         </video>
-            
             <img id="main-image" src="" alt="Work Gallery" class="work-media" style="display: none;">
-            
         </div>
 
         <footer class="work-footer">
@@ -42,10 +43,12 @@
                     <p>150 x 150 x 250cm</p>
                 </div>
             </div>
-            <div class="slider-controls">
-                <span class="arrow prev" onclick="changeMedia(-1)"> < </span>
-                <span id="page-indicator" class="page-indicator">1/8</span>
-                <span class="arrow next" onclick="changeMedia(1)"> > </span>
+            <div class="footer-center">
+                <div class="slider-controls">
+                    <span class="arrow prev" onclick="changeMedia(-1)"> < </span>
+                    <span id="page-indicator" class="page-indicator">1/8</span>
+                    <span class="arrow next" onclick="changeMedia(1)"> > </span>
+                </div>
             </div>
             <div class="footer-right">
                 <a href="gaze-context.html" class="context-link">CONTEXT</a>
@@ -57,16 +60,19 @@
     let currentIndex = 1;
     const totalMedia = 8;
     const folder = "dont_look_at_me/";
-
     const videoEl = document.getElementById('main-video');
     const imageEl = document.getElementById('main-image');
     const indicator = document.getElementById('page-indicator');
 
+    var storedW = 0, storedH = 0;
+
     function syncImageSize() {
         const rect = videoEl.getBoundingClientRect();
         if (rect.width > 0) {
-            imageEl.style.width = rect.width + "px";
-            imageEl.style.height = rect.height + "px";
+            storedW = rect.width;
+            storedH = rect.height;
+            imageEl.style.width = storedW + "px";
+            imageEl.style.height = storedH + "px";
         }
     }
 
@@ -75,7 +81,6 @@
         currentIndex += direction;
         if (currentIndex < 1) currentIndex = totalMedia;
         if (currentIndex > totalMedia) currentIndex = 1;
-
         indicator.innerText = currentIndex + "/" + totalMedia;
 
         if (currentIndex === 1) {
@@ -87,23 +92,23 @@
             videoEl.style.display = "none";
             imageEl.style.display = "block";
             imageEl.src = folder + currentIndex + ".png";
-
             imageEl.classList.remove('natural-size');
             if (currentIndex === 7) {
                 imageEl.style.width = "auto";
                 imageEl.style.height = "auto";
                 imageEl.classList.add('natural-size');
+            } else if (storedW > 0) {
+                imageEl.style.width = storedW + "px";
+                imageEl.style.height = storedH + "px";
             }
         }
     }
 
     window.addEventListener('resize', syncImageSize);
     videoEl.addEventListener('loadedmetadata', syncImageSize);
-
     window.addEventListener('click', () => {
         if (currentIndex === 1 && videoEl.paused) videoEl.play();
     }, { once: true });
 </script>
-
 </body>
 </html>
