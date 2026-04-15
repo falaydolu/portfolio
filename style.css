@@ -46,7 +46,7 @@ body, html {
 }
 .viewport:hover .interactive-reveal { opacity: 0.9; }
 
-/* 静态文字样式 */
+/* ── 底部文字：when 锚定左侧，后续文字向右流动 ── */
 .floating-text {
     position: absolute; top: 95%; left: 16%;
     transform: translate(-50%, -50%);
@@ -54,10 +54,13 @@ body, html {
     font-family: "Gill Sans", sans-serif;
     font-weight: 300; font-size: 18px; color: #ffffff;
     pointer-events: none;
+    white-space: nowrap;
 }
-.t1 { margin-right: 27px; } .t2 { margin-right: 27px; } .t3 { margin-right: 27px; }
-.t4 { margin-right: 27px; } .t5 { margin-right: 27px; }.t6 { margin-right: 27px; }
-.t7 { margin-right: 27px; }.t8 { margin-right: 27px; }
+.t1 { margin-right: 27px; }
+.t2 { margin-right: 27px; display: inline-block; }
+.t3 { margin-right: 27px; }
+.t4 { margin-right: 27px; } .t5 { margin-right: 27px; } .t6 { margin-right: 27px; }
+.t7 { margin-right: 27px; } .t8 { margin-right: 27px; }
 
 .top-right-nav {
     position: fixed;
@@ -111,6 +114,12 @@ body, html {
     transition: opacity 2s ease 1s, transform 2s ease 1s;
 }
 
+/* hover 扩大感应范围 */
+.work-tag.active .tag-link {
+    padding: 30px;
+    margin: -30px;
+}
+
 /* ══════ 手机端适配 ══════ */
 @media (max-width: 768px) {
     .layer {
@@ -139,7 +148,7 @@ body, html {
         transition: opacity 0.2s ease 0.1s, transform 0.2s ease 0.1s;
     }
 
-    /* 底部文字缩小 */
+    /* 底部文字 */
     .floating-text {
         font-size: 12px; left: 50%; top: 94%;
         transform: translate(-50%, -50%);

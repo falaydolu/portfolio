@@ -12,10 +12,9 @@
 
         .cv-section {
             display: grid;
-            /* 这里的 250px 决定了左边 Label 的宽度，你可以根据需要调大或调小 */
             grid-template-columns: 180px 1fr; 
             margin-bottom: 80px;
-            gap: 0; /* 移除 gap 方便精准控制对齐感 */
+            gap: 0;
         }
 
         .cv-label {
@@ -24,24 +23,27 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 500;
-            line-height: 1.8; /* 与右侧第一行对齐 */
+            line-height: 1.8;
         }
 
         .cv-details {
-            /* 保持与 Label 一样的字体风格 */
             font-family: "Gill Sans", sans-serif;
             font-size: 12px; 
             line-height: 1.8;
         }
 
         .entry {
-            margin-bottom: 21px; /* 段落之间的留白 */
-        
+            margin-bottom: 21px;
         }
     </style>
 </head>
 <body>
     <a href="index.html" class="back-link">Back</a>
+
+    <div class="top-right-nav">
+        <a href="about.html" class="nav-item">About</a>
+        <a href="contact.html" class="nav-item">Contact</a>
+    </div>
 
    <main class="context-container">
     <div class="about-content">

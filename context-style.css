@@ -2,7 +2,7 @@ body, html {
     margin: 0;
     padding: 0;
     background-color: #ffffff;
-    font-family: "Gill Sans", sans-serif; /* 使用和你主页统一的字体 */
+    font-family: "Gill Sans", sans-serif;
     color: #000;
     line-height: 1.8;
     -webkit-font-smoothing: antialiased;
@@ -25,9 +25,30 @@ body, html {
     color: #000;
 }
 
-/* 容器：窄栏设计，适合长时间阅读 */
+/* 右上角导航 */
+.top-right-nav {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    display: flex;
+    gap: 30px;
+    z-index: 1000;
+}
+.nav-item {
+    text-decoration: none;
+    color: #000000;
+    font-family: "Gill Sans", sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: opacity 0.3s;
+}
+.nav-item:hover { opacity: 0.5; }
+
+/* 容器：窄栏设计 */
 .context-container {
-    max-width: 700px; /* 进一步收窄，更有书卷气 */
+    max-width: 700px;
     margin: 180px auto; 
     padding: 0 40px;
 }
@@ -51,28 +72,25 @@ body, html {
 
 /* 模块化区块 */
 .content-block {
-    margin-bottom: 120px; /* 巨大的模块间距 */
+    margin-bottom: 30px;
     display: flex;
     flex-direction: column;
-}
-
-.content-block {
-    margin-bottom: 30px; /* 控制段落之间的上下距离 */
 }
 
 /* 正文样式 */
 .text-content p {
     font-size: 15px;
-    line-height: 2.2; /* 极大的行高，营造呼吸感 */
+    line-height: 2.2;
     color: #333;
     margin-bottom: 30px;
-    text-align: justify; /* 两端对齐，看起来更整齐 */
+    text-align: justify;
 }
 
-
-/* 响应式：针对手机端缩小间距 */
+/* 响应式 */
 @media (max-width: 768px) {
     .back-link { top: 20px; left: 20px; font-size: 11px; }
+    .top-right-nav { top: 20px; right: 20px; gap: 18px; }
+    .nav-item { font-size: 11px; }
     .context-container { margin: 100px 40px; padding: 0; }
     .context-header h1 { font-size: 24px; }
     .content-block { margin-bottom: 60px; }

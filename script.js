@@ -1,6 +1,7 @@
 var revealLayer = document.querySelector('.interactive-reveal');
 var bodyImg = document.querySelector('.static-layer');
 var isMobile = window.innerWidth <= 768;
+var introFinished = false;
 
 var points = [
     { id: 'tag-language', imgX: 50, imgY: 62, mobileX: 52, mobileY: 64, screenX: 0, screenY: 0 },
@@ -8,7 +9,6 @@ var points = [
     { id: 'tag-unspoken', imgX: 53, imgY: 45, mobileX: 49, mobileY: 42, screenX: 0, screenY: 0 },
     { id: 'tag-desire',   imgX: 30, imgY: 34, mobileX: 42, mobileY: 84, screenX: 0, screenY: 0 }
 ];
-
 
 function updateLabelPositions() {
     var cw = window.innerWidth;
@@ -57,18 +57,147 @@ function updateLabelPositions() {
     }
 }
 
+/* ── 入场动画：全部同时浮现再淡出 ── */
+function playIntro() {
+    for (var i = 0; i < points.length; i++) {
+        var el = document.getElementById(points[i].id);
+        if (el) el.classList.add('active');
+    }
+    setTimeout(function() {
+        for (var i = 0; i < points.length; i++) {
+            var el = document.getElementById(points[i].id);
+            if (el) el.classList.remove('active');
+        }
+        introFinished = true;
+    }, 4000);
+}
+
 function tryInit() {
     if (bodyImg && bodyImg.naturalWidth > 0) {
         updateLabelPositions();
+        playIntro();
     } else {
         setTimeout(tryInit, 200);
     }
 }
 tryInit();
 window.addEventListener('load', updateLabelPositions);
-window.addEventListener('resize', updateLabelPositions);
+window.addEventListener('resize', function() {
+    updateLabelPositions();
+    measureWordWidths();
+    compensateShift(currentWord);
+});
 
-/* ── 手机端强制显示/隐藏（用 setProperty + !important） ── */
+/* ══════ 乱码 scramble 效果 ══════ */
+var scramblePool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#%&?';
+var scrambleTimers = {};
+
+function scrambleText(el, targetText, duration, key) {
+    if (!el) return;
+    key = key || 'default';
+    if (scrambleTimers[key]) cancelAnimationFrame(scrambleTimers[key]);
+
+    var startTime = Date.now();
+    var len = targetText.length;
+
+    function step() {
+        var elapsed = Date.now() - startTime;
+        var progress = Math.min(elapsed / duration, 1);
+        var result = '';
+
+        for (var i = 0; i < len; i++) {
+            var ch = targetText[i];
+            if (ch === ' ' || ch === ',') {
+                result += ch;
+                continue;
+            }
+            /* 从左到右逐字"定住" */
+            var settle = progress * 1.6 - (i / len) * 0.6;
+            if (settle >= 1) {
+                result += ch;
+            } else {
+                result += scramblePool[Math.floor(Math.random() * scramblePool.length)];
+            }
+        }
+        el.textContent = result;
+
+        if (progress < 1) {
+            scrambleTimers[key] = requestAnimationFrame(step);
+        } else {
+            el.textContent = targetText;
+        }
+    }
+    scrambleTimers[key] = requestAnimationFrame(step);
+}
+
+/* ── 标签 hover 乱码：鼠标进入时乱码再回来 ── */
+var titleOriginals = {};
+
+function initLabelScramble() {
+    for (var i = 0; i < points.length; i++) {
+        var el = document.getElementById(points[i].id);
+        if (!el) continue;
+        var titleEl = el.querySelector('.title');
+        if (!titleEl) continue;
+        titleOriginals[points[i].id] = titleEl.textContent;
+
+        (function(tagId, tEl) {
+            var link = tEl.closest('.tag-link') || tEl.parentElement;
+            link.addEventListener('mouseenter', function() {
+                if (!tEl.closest('.work-tag').classList.contains('active')) return;
+                scrambleText(tEl, titleOriginals[tagId], 500, 'label-' + tagId);
+            });
+        })(points[i].id, titleEl);
+    }
+}
+initLabelScramble();
+
+/* ── 底部文字替换 + "when" 锚定 ── */
+var t2El = document.querySelector('.t2');
+var floatingText = document.querySelector('.floating-text');
+var currentWord = 'it';
+var baseWidth = 0;
+var wordWidths = {};
+
+/* 从 DOM 读取每个标签的文字 */
+var wordMap = {};
+for (var i = 0; i < points.length; i++) {
+    var _el = document.getElementById(points[i].id);
+    if (_el) {
+        var _t = _el.querySelector('.title');
+        if (_t) wordMap[points[i].id] = _t.textContent.trim();
+    }
+}
+
+/* 预测每个替换词对应的容器宽度，用于补偿位移 */
+function measureWordWidths() {
+    if (!t2El || !floatingText) return;
+    var saved = t2El.textContent;
+    var allWords = ['it'];
+    for (var id in wordMap) allWords.push(wordMap[id]);
+    for (var w = 0; w < allWords.length; w++) {
+        t2El.textContent = allWords[w];
+        wordWidths[allWords[w]] = floatingText.offsetWidth;
+    }
+    t2El.textContent = saved;
+    baseWidth = wordWidths['it'];
+}
+measureWordWidths();
+
+function compensateShift(word) {
+    if (!floatingText || !baseWidth) return;
+    var w = wordWidths[word] || baseWidth;
+    floatingText.style.marginLeft = ((w - baseWidth) / 2) + 'px';
+}
+
+function swapWord(newWord) {
+    if (newWord === currentWord) return;
+    currentWord = newWord;
+    compensateShift(newWord);
+    scrambleText(t2El, newWord, 350, 'bottom-text');
+}
+
+/* ── 手机端强制显示/隐藏 ── */
 function mobileActivate(el) {
     if (!el) return;
     el.style.setProperty('opacity', '1', 'important');
@@ -106,33 +235,48 @@ function mobileDeactivateAll() {
     }
 }
 
-/* ── 桌面端：原始 CSS class 方式 ── */
+/* ── 桌面端鼠标 ── */
 var isTouching = false;
 
 document.addEventListener('mousemove', function(e) {
-    if (isTouching) return;
+    if (isTouching || !introFinished) return;
     var x = e.clientX, y = e.clientY;
 
     revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at ' + x + 'px ' + y + 'px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px)';
     revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
 
-    var thr = Math.sqrt(window.innerWidth * window.innerWidth + window.innerHeight * window.innerHeight) * 0.15;
+    var thr = Math.sqrt(window.innerWidth * window.innerWidth + window.innerHeight * window.innerHeight) * 0.09;
+    var closestId = null;
+    var closestDist = Infinity;
+
     for (var i = 0; i < points.length; i++) {
         var p = points[i], el = document.getElementById(p.id);
         if (!el) continue;
         var d = Math.sqrt((x - p.screenX) * (x - p.screenX) + (y - p.screenY) * (y - p.screenY));
-        if (d < thr) { el.classList.add('active'); } else { el.classList.remove('active'); }
+        if (d < thr) {
+            el.classList.add('active');
+            if (d < closestDist) { closestDist = d; closestId = p.id; }
+        } else {
+            el.classList.remove('active');
+        }
+    }
+
+    if (closestId && wordMap[closestId]) {
+        swapWord(wordMap[closestId]);
+    } else {
+        swapWord('it');
     }
 });
 
 document.addEventListener('mouseleave', function() {
-    if (isTouching) return;
+    if (isTouching || !introFinished) return;
     revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 400px)';
     revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
     for (var i = 0; i < points.length; i++) {
         var el = document.getElementById(points[i].id);
         if (el) el.classList.remove('active');
     }
+    swapWord('it');
 });
 
 /* ── 手机端触摸 ── */
@@ -140,6 +284,7 @@ var fadeTimer = null;
 var mobileRadius = 200;
 
 function handleTouch(e) {
+    if (!introFinished) return;
     isTouching = true;
     var touch = e.touches[0];
     if (!touch) return;
@@ -149,20 +294,27 @@ function handleTouch(e) {
     revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at ' + x + 'px ' + y + 'px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ' + mobileRadius + 'px)';
     revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
 
-    var thr = Math.sqrt(window.innerWidth * window.innerWidth + window.innerHeight * window.innerHeight) * 0.2;
-    var hits = '';
+    var thr = Math.sqrt(window.innerWidth * window.innerWidth + window.innerHeight * window.innerHeight) * 0.12;
+    var closestId = null;
+    var closestDist = Infinity;
+
     for (var i = 0; i < points.length; i++) {
         var p = points[i], el = document.getElementById(p.id);
         if (!el) continue;
         var d = Math.sqrt((x - p.screenX) * (x - p.screenX) + (y - p.screenY) * (y - p.screenY));
         if (d < thr) {
             mobileActivate(el);
-            hits += p.id.replace('tag-','') + ' ';
+            if (d < closestDist) { closestDist = d; closestId = p.id; }
         } else {
             mobileDeactivate(el);
         }
     }
-    debugEl.textContent = 'T:(' + Math.round(x) + ',' + Math.round(y) + ')\nhits: ' + (hits || 'none') + '\ncomputed: ' + (hits ? window.getComputedStyle(document.getElementById(points[0].id)).opacity : '-');
+
+    if (closestId && wordMap[closestId]) {
+        swapWord(wordMap[closestId]);
+    } else {
+        swapWord('it');
+    }
 
     if (fadeTimer) clearTimeout(fadeTimer);
 }
@@ -176,5 +328,6 @@ document.addEventListener('touchend', function() {
         revealLayer.style.WebkitMaskImage = 'radial-gradient(circle at -1000px -1000px, rgba(0,0,0,1) 0%, rgba(0,0,0,0) ' + mobileRadius + 'px)';
         revealLayer.style.maskImage = revealLayer.style.WebkitMaskImage;
         mobileDeactivateAll();
+        swapWord('it');
     }, 3000);
 });
